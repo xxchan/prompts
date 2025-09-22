@@ -13,21 +13,36 @@ usage() {
   cat <<EOF
 Usage: $(basename "$0") [SOURCE_DIR] [--mode skip|backup|replace] [--apply] [--dest DIR] [--top-level]
 
-Creates symlinks into \"$HOME\" from SOURCE_DIR.
+Creates symlinks into "$HOME" from SOURCE_DIR.
 Defaults: SOURCE_DIR=cwd, mode=backup, scope=per-file (recursive), dry-run.
 
 Options:
   --mode       Conflict handling: skip (do nothing), backup (rename existing to .bak-<timestamp>), replace (remove then link)
   --apply      Perform changes (otherwise dry-run)
-  --dest DIR   Destination directory (default: \"$HOME\")
+  --dest DIR   Destination directory (default: "$HOME")
   --top-level  Link only top-level items as symlinks (no recursion)
 
 Ignores by default: .git, .DS_Store, README*, LICENSE*, node_modules, target, dist, scripts
 Explicitly allowed examples: .claude, .codex
+
+Behavior:
+  - If destination already links to the same source, it is left unchanged.
+  - If destination exists and has the same file content as the source, it is left unchanged (no backup/replace).
 EOF
 }
 
 timestamp() { date +%Y%m%d-%H%M%S; }
+
+# Compare two paths and return success if their contents are identical (non-directories)
+files_same() {
+  local a="$1" b="$2"
+  # Only compare if both exist and are not directories
+  if [[ -e "$a" && -e "$b" && ! -d "$a" && ! -d "$b" ]]; then
+    cmp -s -- "$a" "$b"
+    return $?
+  fi
+  return 1
+}
 
 # Parse flags (after optional SRC_DIR positional)
 if [[ $# -gt 0 && $1 != --* ]]; then
@@ -79,7 +94,7 @@ DEST_DIR="$(cd "$DEST_DIR" && pwd -P)"
 # Ignore patterns
 IGNORE_PATTERNS=(
   ".git" ".DS_Store" "README" "README.md" "LICENSE" "LICENSE.md" \
-  "node_modules" "target" "dist" "scripts"
+  "node_modules" "target" "dist" "scripts" ".vscode"
 )
 
 should_ignore() {
@@ -104,7 +119,7 @@ ensure_dir() {
   if [[ -e "$dir" || -L "$dir" ]]; then
     case "$MODE" in
       skip)
-        echo "SKIP    $dir (exists and not dir)"
+        echo "SKIP        $dir (exists and not dir)"
         return 1
         ;;
       backup)
@@ -146,7 +161,15 @@ link_one() {
     local target
     target=$(readlink "$dst")
     if [[ "$target" == "$src" ]]; then
-      echo "OK      $dst -> (already) $src"
+      echo "NOOP (already linked)        $dst -> $src"
+      return
+    fi
+  fi
+
+  # If destination exists and contents are identical to source, leave as-is
+  if [[ -e "$dst" || -L "$dst" ]]; then
+    if files_same "$src" "$dst"; then
+      echo "NOOP (same content)        $dst == $src "
       return
     fi
   fi
@@ -154,18 +177,18 @@ link_one() {
   if [[ -e "$dst" || -L "$dst" ]]; then
     case "$MODE" in
       skip)
-        echo "SKIP    $dst (exists)"
+        echo "SKIP        $dst (exists)"
         return
         ;;
       backup)
         local bak="$dst.bak-$(timestamp)"
-        echo "BACKUP  $dst -> $bak"
+        echo "BACKUP        $dst -> $bak"
         if $APPLY; then
           mv "$dst" "$bak"
         fi
         ;;
       replace)
-        echo "REMOVE  $dst"
+        echo "REMOVE        $dst"
         if $APPLY; then
           rm -rf "$dst"
         fi
@@ -176,7 +199,7 @@ link_one() {
     esac
   fi
 
-  echo "LINK    $dst -> $src"
+  echo "LINK!        $dst -> $src"
   if $APPLY; then
     ln -s "$src" "$dst"
   fi
@@ -190,7 +213,7 @@ link_tree() {
     [[ -z "$name" ]] && continue
     if should_ignore "$name"; then
       local shown_name="$rel_prefix$name"
-      echo "IGNORE  ${shown_name%/}"
+      echo "IGNORE        ${shown_name%/}"
       continue
     fi
     src_path="$cur_src/$name"
@@ -202,7 +225,7 @@ link_tree() {
       # If destination lies within this source directory, skip to avoid self-recursion
       if [[ -n "$cand_abs" && ( "$DEST_DIR" == "$cand_abs" || "$DEST_DIR" == "$cand_abs"/* ) ]]; then
         local shown_name="$rel_prefix$name"
-        echo "IGNORE  ${shown_name%/} (dest)"
+        echo "IGNORE        ${shown_name%/} (dest)"
         continue
       fi
     fi
@@ -223,7 +246,7 @@ if [[ "$SCOPE" == "top" ]]; then
   while IFS= read -r name; do
     [[ -z "$name" ]] && continue
     if should_ignore "$name"; then
-      echo "IGNORE  $name"
+      echo "IGNORE        $name"
       continue
     fi
     src_path="$SRC_DIR/$name"
