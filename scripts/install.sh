@@ -94,7 +94,8 @@ DEST_DIR="$(cd "$DEST_DIR" && pwd -P)"
 # Ignore patterns
 IGNORE_PATTERNS=(
   ".git" ".DS_Store" "README" "README.md" "LICENSE" "LICENSE.md" \
-  "node_modules" "target" "dist" "scripts" ".vscode"
+  "node_modules" "target" "dist" "scripts" ".vscode" \
+  "promptkit"
 )
 
 should_ignore() {
