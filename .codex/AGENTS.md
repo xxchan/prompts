@@ -12,7 +12,7 @@ sed -n '1,220p' app/(app)/run/page.tsx   # wrong!
 ### Type safety
 
 VERY IMPORTANT: You should use type system properly to help you write correct code and NEVER work around the type system.
-DONOT use `any` in TypeScript,
+DONOT use `any`/`unknown` in TypeScript, try to figure out the correct type of the value.
 DONOT use `# type: ignore` in Python.
 
 ### Python
