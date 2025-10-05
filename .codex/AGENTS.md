@@ -7,6 +7,8 @@ sed -n '1,220p' 'app/(app)/run/page.tsx' # correct
 sed -n '1,220p' app/(app)/run/page.tsx   # wrong!
 ```
 
+- When interacting with GitHub, use `gh` CLI.
+
 ## Code style
 
 ### Type safety
