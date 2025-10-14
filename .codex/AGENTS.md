@@ -8,7 +8,7 @@ sed -n '1,220p' app/(app)/run/page.tsx   # wrong!
 ```
 
 - When interacting with GitHub, use `gh` CLI.
-- When starting a long running server, you MUST let it run in the background. If you do not have such a tool, use `tmux` to do so.
+- When starting a long running server, you MUST let it run in the background. Use `tmux` to do so, unless you are explicitly given a tool like `Bash` with `run_in_background` flag.
 
 ## Code style
 
