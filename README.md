@@ -7,6 +7,10 @@ Useful links:
 
 ## Prompts
 
+### Wide Research
+
+https://github.com/grapeot/codex_wide_research
+
 ### 深度思考助手
 
 https://www.superlinear.academy/c/ai-resources/200-o1-pro
