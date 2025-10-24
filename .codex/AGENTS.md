@@ -22,6 +22,15 @@ DONOT use `# type: ignore` in Python.
 
 DONOT use `try import`, just use `import` directly.
 
+## Using Libraries
+
+You are encouraged to use well-known libraries to implement features to adopt current best practices, instead of building everything from scratch.
+
+e.g., use ReactQuery, Nuqs, Zod, Tailwind CSS, shadcn/ui, etc.
+
+- When using libraries, you MUST use the latest stable version of the library. You must search for the latest version of the library on the internet.
+
+
 
 ## Verifying Changes
 
