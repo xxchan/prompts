@@ -12,6 +12,9 @@ sed -n '1,220p' app/(app)/run/page.tsx   # wrong!
 
 ## Code style
 
+不要自作主张，做兜底/兼容性方案，需要写出简洁优美的代码，而不是过分防御式编程。例如不要假设一个 API 可能返回转成了 string 的 JSON 值，要你自己 parse。你应该优先验证这个 API 真实的返回结果的形态。
+如果你觉得确有必要兜底，应当先向用户确认，或者优先在代码中用 TODO 的形式作为可能需要考虑的点提出，而不是直接实现兜底。
+
 ### Type safety
 
 VERY IMPORTANT: You should use type system properly to help you write correct code and NEVER work around the type system.
