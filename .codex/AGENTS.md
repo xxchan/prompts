@@ -25,6 +25,7 @@ DONOT use `# type: ignore` in Python.
 ### Python
 
 DONOT use `try import`, just use `import` directly.
+Always use `uv` to run python related tools.
 
 ## Using Libraries
 
