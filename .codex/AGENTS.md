@@ -72,3 +72,7 @@ sed -n '1,220p' app/(app)/run/page.tsx   # wrong!
 
 DONOT use `try import`, just use `import` directly.
 Always use `uv` to run python related tools.
+
+### JavaScript / TypeScript
+
+- Use Temporal instead of Date
