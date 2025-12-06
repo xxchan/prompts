@@ -52,6 +52,33 @@ IMPORTANT guidelines:
 - do not blindly test. You are encouraged to add more debugging logs if it can help.
 - add timeouts to verification scripts/commands to avoid hanging indefinitely.
 
+## Git Guidelines
+
+### VCS workflow
+
+IMPORTANT: Use `git-spice` for stacking workflow - when developing large features, split work in atomic changes, and should be individually mergeable.
+
+cheatsheet:
+```
+# Track a normal branch - ALWAYS run this before starting work to get the current status of the branch
+$ gs branch track
+
+# Stack a new branch on top of the current branch for a large feature X
+$ gs branch create feat-x-part-1
+
+# Stack another branch on top of part 1
+$ gs branch create feat-x-part-2
+
+# Submit pull requests for part1 and part2.
+$ gs stack submit
+
+# Pull latest changes from the remote repository
+# and delete merged branches.
+$ gs repo sync
+
+# Restack branches on top of the latest changes.
+$ gs stack restack
+```
 
 ## Language Specific Guidelines
 
