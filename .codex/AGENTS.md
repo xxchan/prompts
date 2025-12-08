@@ -103,3 +103,7 @@ Always use `uv` to run python related tools.
 ### JavaScript / TypeScript
 
 - Use Temporal instead of Date
+
+## Other guidelines
+- When you are asked to write a CHANGELOG, you should find the changelog file in the current project.
+  If the CHANGELOG is grouped by date, you must check the current date if you do not know.
