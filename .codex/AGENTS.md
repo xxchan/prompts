@@ -60,14 +60,17 @@ IMPORTANT: Use `git-spice` for stacking workflow - when developing large feature
 
 cheatsheet:
 ```
-# Track a normal branch - ALWAYS run this before starting work to get the current status of the branch
+# Check current git spice stack status
+$ gs ls
+
+# Track a normal branch
 $ gs branch track
 
-# Stack a new branch on top of the current branch for a large feature X
-$ gs branch create feat-x-part-1
+# Stack a new branch on top of the current branch for a large feature X (and commit staged changes)
+$ gs branch create feat-x-part-1 -m "commit message"
 
-# Stack another branch on top of part 1
-$ gs branch create feat-x-part-2
+# Stack another branch on top of part 1 without commit
+$ gs branch create feat-x-part-2 --no-commit
 
 # Submit pull requests for part1 and part2.
 $ gs stack submit
