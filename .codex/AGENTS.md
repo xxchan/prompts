@@ -13,15 +13,31 @@ You are coding for humans, but optimized for agents:
    - For data that crosses boundaries (API, DB, messages), define **one canonical schema**.
    - All other types must be derived from it (via language tools, codegen, or imports), not re-declared.
 
-2. **Never weaken the type system**
-   - Do **not** use dynamic escape hatches to silence errors:
+2. Annotate **explicit type hints** judiciously at boundaries where types are not locally obvious.
+
+  Always annotate:
+  - External API/SDK return values: `const value: SdkType[] = await sdk.fetch()`
+  - Exported function signatures (params + return): `export function parse(raw: string): Config`
+  - Cross-module boundaries where tracing requires file jumps
+
+  Why this matters:
+  1. Enables static type lookup via CLI tools (`npx expand-my-type file.ts TypeName`)
+  2. Removes need for runtime defensive checks (`typeof x === 'number'`)
+  3. Makes code locally readable without IDE hover
+
+3. **Never weaken the type system**
+   - Find the type definition first if you are not sure.
+     - If you are given concrete IDE/LSP tools, use that.
+     - TypeScript: use `npx expand-my-type <file.ts> <TypeName>`
+     - Use a subagent to find the type definition in `node_modules`, `site-packages` etc.
+   - NEVER use dynamic escape hatches to silence errors:
      - TypeScript: `any`, `unknown`→`as Any`, non-null `!`, broad `Record<string, any>`.
      - Python: untyped function parameters/returns for public APIs, `# type: ignore` without reason.
      - Other statically typed languages: `unsafe`, raw casts, reflection-based hacks unless strictly necessary.
    - If a type mismatch happens:
      - **Fix the model/contract or call site**, do not cast it away.
 
-3. **Contract-first for I/O**
+4. **Contract-first for I/O**
    - For network, file, DB, message interfaces:
      - Define/adjust the schema/model **first**.
      - Then implement code to conform to that schema.
