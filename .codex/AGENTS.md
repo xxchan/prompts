@@ -26,9 +26,9 @@ You are coding for humans, but optimized for agents:
   3. Makes code locally readable without IDE hover
 
 3. **Never weaken the type system**
-   - Find the type definition first if you are not sure.
+   - Find the type definition first if you are not sure. AVOID defensive programming.
      - If you are given concrete IDE/LSP tools, use that.
-     - TypeScript: prefer `npx expand-my-type <file.ts> <TypeName>` to search in `node_modules`.
+     - TypeScript: use `npx expand-my-type <file.ts> <TypeName>` aggressively.
      - If you failed to get the type quickly, use a subagent to find the type definition in `node_modules`, `site-packages` etc.
    - NEVER use dynamic escape hatches to silence errors:
      - TypeScript: `any`, `unknown`→`as Any`, non-null `!`, broad `Record<string, any>`.
