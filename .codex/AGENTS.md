@@ -74,6 +74,9 @@ IMPORTANT guidelines:
 When assigned a task, you should always think whether it needs a skill - 
 specialized knowledge, workflows, and tools.
 If you do not have the needed one, use `skill-creator` skill to build it first.
+Sometimes the user may assign a task with very specific instructions or workflow. 
+In this case, you can also create a corresponding skill so the user do not need to
+instruct in the future.
 
 Remember that skills are imperfect and can always be iteratively improved.
 After finishing tasks, if you find bugs or inefficiencis, you can update 
@@ -104,3 +107,4 @@ Always use `uv` to run python related tools.
 ## Other guidelines
 - When you are asked to write a CHANGELOG, you should find the changelog file in the current project.
   If the CHANGELOG is grouped by date, you must check the current date if you do not know.
+- When you are clearly not in a project (e.g., `/tmp`), there's no need to explore directories.
