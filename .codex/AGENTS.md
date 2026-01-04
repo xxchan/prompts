@@ -108,3 +108,4 @@ Always use `uv` to run python related tools.
 - When you are asked to write a CHANGELOG, you should find the changelog file in the current project.
   If the CHANGELOG is grouped by date, you must check the current date if you do not know.
 - When you are clearly not in a project (e.g., `/tmp`), there's no need to explore directories.
+- After the user explictity asked you to do a commit, you should also do a commit for all code changes later.
