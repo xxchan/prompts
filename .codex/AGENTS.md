@@ -1,13 +1,14 @@
 ## High Level Instructions
 
-### 1. Goal
+### Goal
 
 You are coding for humans, but optimized for agents:
 - Make code **easy to reason about** from static analysis + local context.
 - Prefer **explicit contracts** over "smart" inference and magic.
-- Never trade type safety for convenience.
 
-### 2. Types & Contracts
+### Types & Contracts
+
+Never trade type safety for convenience.
 
 1. **Single source of truth**
    - For data that crosses boundaries (API, DB, messages), define **one canonical schema**.
@@ -43,12 +44,12 @@ You are coding for humans, but optimized for agents:
      - Then implement code to conform to that schema.
    - Treat compiler / type-checker errors as the primary feedback loop.
 
-### 3. Code style
+### Code style
 
 - VERY IMPORTANT: 避免过度防御式编程。防御式编程本质上是懒惰、对问题本质理解不清楚的表现。正确的做法是搞清楚 Single source of truth，依赖正确而合理的假设。依赖类型系统。
   不要自作主张，做兜底/兼容性方案，需要写出简洁优美的代码。
 
-### 4. Using Libraries
+### Using Libraries
 
 You are encouraged to use well-known libraries to implement features to adopt current best practices, instead of building everything from scratch.
 
@@ -56,7 +57,7 @@ e.g., use ReactQuery, Nuqs, Zod, Tailwind CSS, shadcn/ui, etc.
 
 - When using libraries, you MUST search online to use the latest stable version of the library.
 
-### 5. Verifying Changes
+### Verifying Changes
 
 After making changes, it's CRITICAL to verify that the changes are working as expected. Reading code alone is usually not enough.
 Whenever possible, you should prefer real verification first, and code analysis second.
@@ -68,36 +69,16 @@ IMPORTANT guidelines:
 - do not blindly test. You are encouraged to add more debugging logs if it can help.
 - add timeouts to verification scripts/commands to avoid hanging indefinitely.
 
-## Git Guidelines
+### Build skills to improve yourself
 
-### VCS workflow
+When assigned a task, you should always think whether it needs a skill - 
+specialized knowledge, workflows, and tools.
+If you do not have the needed one, use `skill-creator` skill to build it first.
 
-IMPORTANT: Use `git-spice` for stacking workflow - when developing large features, split work in atomic changes, and should be individually mergeable.
+Remember that skills are imperfect and can always be iteratively improved.
+After finishing tasks, if you find bugs or inefficiencis, you can update 
+workflows, and tools, or jot down the lesson to improve the skill.
 
-cheatsheet:
-```
-# Check current git spice stack status
-$ gs ls
-
-# Track a normal branch
-$ gs branch track
-
-# Stack a new branch on top of the current branch for a large feature X (and commit staged changes)
-$ gs branch create feat-x-part-1 -m "commit message"
-
-# Stack another branch on top of part 1 without commit
-$ gs branch create feat-x-part-2 --no-commit
-
-# Submit pull requests for part1 and part2.
-$ gs stack submit
-
-# Pull latest changes from the remote repository
-# and delete merged branches.
-$ gs repo sync
-
-# Restack branches on top of the latest changes.
-$ gs stack restack
-```
 
 ## Language Specific Guidelines
 
@@ -119,9 +100,6 @@ sed -n '1,220p' app/(app)/run/page.tsx   # wrong!
 DONOT use `try import`, just use `import` directly.
 Always use `uv` to run python related tools.
 
-### JavaScript / TypeScript
-
-- Use Temporal instead of Date
 
 ## Other guidelines
 - When you are asked to write a CHANGELOG, you should find the changelog file in the current project.
