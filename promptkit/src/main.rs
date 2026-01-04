@@ -9,7 +9,9 @@ use std::path::{Path, PathBuf};
 use anyhow::{Context, Result};
 use clap::{Args, Parser, Subcommand};
 use ignore::{DirEntry, WalkBuilder};
-use tiktoken_rs::cl100k_base;
+use tiktoken_rs::o200k_base;
+
+const TOKENIZER_NAME: &str = "o200k_base";
 
 const DEFAULT_IGNORED_DIRS: [&str; 5] = [".git", "node_modules", "target", ".venv", "venv"];
 
@@ -33,6 +35,8 @@ enum Command {
     /// Some stats info is written to stderr.
     /// Some common ignore dirs e.g., `node_modules`, `target` will be ignored, and `.gitignore` will also be respected
     Dump(DumpArgs),
+    /// Count tokens in one or more files using the o200k_base tokenizer.
+    Count(CountArgs),
 }
 
 #[derive(Args, Debug)]
@@ -45,6 +49,13 @@ struct DumpArgs {
     /// Maximum file size (in bytes) to include in the dump.
     #[arg(long, value_name = "BYTES", default_value_t = 64_000)]
     max_file_size: usize,
+}
+
+#[derive(Args, Debug)]
+struct CountArgs {
+    /// Files to count tokens for. Use '-' to read from stdin.
+    #[arg(required = true)]
+    files: Vec<PathBuf>,
 }
 
 struct FileDump {
@@ -78,6 +89,7 @@ fn main() -> Result<()> {
 
     match cli.command {
         Command::Dump(args) => run_dump(args)?,
+        Command::Count(args) => run_count(args)?,
     }
 
     Ok(())
@@ -137,7 +149,7 @@ fn run_dump(args: DumpArgs) -> Result<()> {
 
     // Stats info (stderr)
 
-    let tokenizer = cl100k_base().context("failed to load cl100k_base tokenizer")?;
+    let tokenizer = o200k_base().context("failed to load o200k_base tokenizer")?;
     let token_count = tokenizer.encode_ordinary(&prompt).len();
     let included_count = files.len();
     let skipped_count = skipped.len();
@@ -156,6 +168,39 @@ fn run_dump(args: DumpArgs) -> Result<()> {
         "Stats: tokens={}, files_included={}, files_skipped={}, bytes={}",
         token_count, included_count, skipped_count, total_bytes
     );
+    Ok(())
+}
+
+fn run_count(args: CountArgs) -> Result<()> {
+    let tokenizer = o200k_base().context("failed to load o200k_base tokenizer")?;
+
+    let mut total_tokens = 0usize;
+    let multiple_files = args.files.len() > 1;
+
+    for file_path in &args.files {
+        let content = if file_path.as_os_str() == "-" {
+            io::read_to_string(io::stdin()).context("failed to read from stdin")?
+        } else {
+            fs::read_to_string(file_path)
+                .with_context(|| format!("failed to read file: {}", file_path.display()))?
+        };
+
+        let tokens = tokenizer.encode_ordinary(&content).len();
+        total_tokens += tokens;
+
+        if multiple_files {
+            println!("{}\t{}", tokens, file_path.display());
+        } else {
+            println!("{}", tokens);
+        }
+    }
+
+    if multiple_files {
+        println!("{}\ttotal", total_tokens);
+    }
+
+    eprintln!("tokenizer: {}", TOKENIZER_NAME);
+
     Ok(())
 }
 
