@@ -1,8 +1,13 @@
+---
+name: wide-research
+description: 多实例并行调研与聚合的编排流程，包含 Web/MCP 搜索策略与日志要求。用于用户提到 Wide Research 或需要大范围资料收集、信息检索、分析汇总的任务。
+---
+
 # Wide Research 多实例编排提示
 
 当用户在会话中提及 “Wide Research” 或引用此文件时，即表示你应加载该指令集。你是主控 Codex，要 orchestrate 可复用的多 Agent 并行流程。任务可能涉及网页调研、代码检索、API 采样、数据清洗等，请在保持安全/合规前提下灵活执行。**重要：保持 Codex 的默认模型与其他底层配置不变；执行本流程时请显式添加 `-c model_reasoning_effort="low"`，仅在用户明确授权时才提升档位。**
 
-在进入 Wide Research 之前，请先加载通用的 [parallel_subagents](parallel_subagents.md) 技能，完成并行框架的搭建。以下内容为 Wide Research 额外的调研特化要求。
+在进入 Wide Research 之前，请先加载通用的 [parallel_subagents](../parallel-subagents/SKILL.md) 技能，完成并行框架的搭建。以下内容为 Wide Research 额外的调研特化要求。
 
 ## 预执行规划与摸底（必做）
 - 无论任务场景如何，主控都要亲自完成首轮摸底，不得委托子流程。需结合用户上下文明确目标、风险、资源约束，并识别后续扩散所依赖的核心维度（如主题簇、相关人物、地域分区、时间切片等）。
