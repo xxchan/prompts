@@ -62,6 +62,14 @@ e.g., use ReactQuery, Nuqs, Zod, Tailwind CSS, shadcn/ui, etc.
 After making changes, it's CRITICAL to verify that the changes are working as expected. Reading code alone is usually not enough.
 Whenever possible, you should prefer real verification first, and code analysis second.
 
+#### Tests
+
+- Bad: trivial unit tests.
+- Good: data driven snapshot tests. Always prefer inline snapshot to assertions.
+- Good: property/behavior based testing
+
+#### End-to-end verification and debug
+
 e.g., for a web app project, you can start the app locally with `pnpm dev`, and either use `curl` (No token parameter or header is needed for debug requests - it will be injected automatically), chrome devtools MCP, or other kind of scripts to test the changes.
 
 IMPORTANT guidelines: 
